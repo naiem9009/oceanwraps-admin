@@ -16,8 +16,6 @@ export const metadata: Metadata = {
       noimageindex: true,
     }
   },
-  themeColor: '#020817',
-  metadataBase: new URL(process.env.ADMIN_BASE_URL || 'http://localhost:3000'),
 }
 
 export default async function PaymentPage({ 

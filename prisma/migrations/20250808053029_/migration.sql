@@ -79,6 +79,8 @@ CREATE TABLE "public"."payments" (
     "stripeClientSecret" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "stripeSetupIntentId" TEXT,
+    "stripeSetupClientSecret" TEXT,
 
     CONSTRAINT "payments_pkey" PRIMARY KEY ("id")
 );

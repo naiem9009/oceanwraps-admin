@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Menu, Home, FileText, CreditCard, LogOut, Waves } from 'lucide-react'
+import { Menu, Home, FileText, CreditCard, LogOut } from 'lucide-react'
 import Image from 'next/image'
 
 const navigation = [

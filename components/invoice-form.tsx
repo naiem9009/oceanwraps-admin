@@ -164,6 +164,7 @@ export function InvoiceForm() {
                 value={invoiceNumber}
                 onChange={(e) => setInvoiceNumber(e.target.value)}
                 required
+                readOnly
               />
             </div>
             

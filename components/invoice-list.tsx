@@ -215,9 +215,9 @@ export function InvoiceList() {
   return (
     <div className="space-y-4">
       {emailSuccess && (
-        <Alert>
+        <Alert className='bg-green-100 text-green-800'>
           <Mail className="h-4 w-4" />
-          <AlertDescription>
+          <AlertDescription className='text-green-800'>
             Invoice email sent successfully! Customer will receive payment instructions.
           </AlertDescription>
         </Alert>

@@ -222,7 +222,7 @@ export async function sendInvoiceEmail({
       email: to,
     },
     items,
-    advanceAmount: advanceAmount.toFixed(2),
+    advanceAmount: "0.00",
     totalAmount : totalAmount.toFixed(2),
     note: '50% deposit is required to begin production unless otherwise stated. A 50% deposit is also required to schedule your project.  We cannot hold dates without a deposit',
     status: 'unpaid',
@@ -379,7 +379,7 @@ export async function sendPaymentConfirmationEmail({
                       Questions? Reply to this email or contact us at oceanwraps@gmail.com
                     </p>
                     <p style="margin: 10px 0 0 0; color: #6b7280; font-size: 12px;">
-                      © ${new Date().getFullYear()} <a href="https://oceanwraps.com" style="color: #2563eb; text-decoration: none;">Oceanwraps</a>. All rights reserved.
+                      © ${new Date().getFullYear()} <a href="https://oceanwraps.com" style="color: #059669; text-decoration: none;">Oceanwraps</a>. All rights reserved.
                     </p>
                   </div>
                 </td>

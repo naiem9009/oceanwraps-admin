@@ -27,6 +27,7 @@ model PaymentMethod {
   id                    String   @id @default(cuid())
   customerId            String
   stripePaymentMethodId String   @unique
+  cardFingerprint       String?
   type                  String   // card, bank_account, etc.
   last4                 String?
   brand                 String?
@@ -91,6 +92,9 @@ model Payment {
   invoice           Invoice       @relation(fields: [invoiceId], references: [id])
   customer          Customer      @relation(fields: [customerId], references: [id])
   paymentMethod     PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  stripeSetupIntentId String?
+  stripeSetupClientSecret String?
+
 
   @@map("payments")
 }

@@ -61,8 +61,8 @@ export const generateFileInvoiceData = async (invoiceData: InvoiceData) => {
   <title>Invoice-${invoiceData.invoiceNumber}}</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body style="font-family: 'Inter', sans-serif; background: #f5f5f5; padding: 20px; margin: 0;">
-  <div style="max-width: 800px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+<body style="font-family: 'Inter', sans-serif; padding: 20px; margin: 0;">
+  <div style="max-width: 800px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden;">
     <!-- Header Section -->
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
       <div style="flex: 1;">
@@ -158,7 +158,7 @@ export const generateFileInvoiceData = async (invoiceData: InvoiceData) => {
     </div>
 
     <!-- Totals Section -->
-    <div style="padding: 20px 40px; background: #f8f9fa; display: flex; justify-content: flex-end;">
+    <div style="padding: 20px 40px; display: flex; justify-content: flex-end;">
       <div style="width: 300px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-top: 12px;">
           <div style="font-weight: 700; color: #111827;">Total</div>

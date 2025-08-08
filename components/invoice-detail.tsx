@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CreditCard, ArrowLeft, AlertCircle, CheckCircle, RefreshCw, Mail } from 'lucide-react'
 import Link from 'next/link'
+import { toast, Toaster } from 'sonner'
 
 interface Invoice {
   id: string
@@ -81,77 +82,84 @@ export function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
     fetchInvoice()
   }
 
-  const handleCreateAdvancePayment = async () => {
-    setActionLoading(true)
-    try {
-      const response = await fetch('/api/payments/create-advance-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ invoiceId: invoice?.id }),
-      })
-      
-      const data = await response.json()
-      
-      if (response.ok) {
-        // Redirect to Stripe checkout or show payment form
-        window.open(`/pay/${invoice?.id}`, '_blank')
-      } else {
-        alert('Failed to create payment link')
-      }
-    } catch (error) {
-      alert('Error creating payment link')
-    } finally {
-      setActionLoading(false)
-    }
-  }
+
 
   const handleChargeRemaining = async () => {
-    setActionLoading(true)
-    try {
-      const response = await fetch('/api/payments/charge-remaining', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ invoiceId: invoice?.id }),
-      })
-      
-      const data = await response.json()
-      
-      if (response.ok) {
-        if (data.requiresAction) {
-          // Handle 3D Secure or other authentication
-          window.open(`/payment/${data.paymentId}?client_secret=${data.clientSecret}`, '_blank')
-        } else {
-          alert('Remaining payment charged successfully!')
-          fetchInvoice() // Refresh invoice data
+    // Show confirmation dialog
+    toast('Confirm Payment', {
+      description: `Charge remaining $${Number(invoice?.remainingAmount).toFixed(2)}?`,
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+          setActionLoading(true)
+          const toastId = toast.loading('Processing payment...')
+          
+          try {
+            const response = await fetch('/api/payments/charge-remaining', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ invoiceId: invoice?.id }),
+            })
+            
+            const data = await response.json()
+            
+            if (response.ok) {
+              if (data.requiresAction) {
+                toast.info('Action required', {
+                  description: 'Please complete authentication in the new window'
+                })
+                window.open(`/payment/${data.paymentId}?client_secret=${data.clientSecret}`, '_blank')
+              } else {
+                toast.success('Payment successful!', {
+                  description: `Remaining $${Number(invoice?.remainingAmount).toFixed(2)} charged`
+                })
+                fetchInvoice()
+              }
+            } else {
+              toast.error('Payment failed', {
+                description: data.error || 'Could not process payment'
+              })
+            }
+          } catch (error) {
+            toast.error('Payment error', {
+              description: 'An unexpected error occurred'
+            })
+          } finally {
+            toast.dismiss(toastId)
+            setActionLoading(false)
+          }
         }
-      } else {
-        alert(data.error || 'Failed to charge remaining payment')
+      },
+      cancel: {
+        label: 'Cancel',
+        onClick: () => {}
       }
-    } catch (error) {
-      alert('Error charging remaining payment')
-    } finally {
-      setActionLoading(false)
-    }
+    })
   }
+
 
   const handleSendEmail = async () => {
     setActionLoading(true)
+    const toastId = toast.loading('Sending invoice email...')
+    
     try {
       const response = await fetch(`/api/invoices/${invoice?.id}/send-email`, {
         method: 'POST',
       })
       
       if (response.ok) {
-        alert('Invoice email sent successfully!')
+        toast.success('Email sent successfully!')
       } else {
-        alert('Failed to send invoice email')
+        toast.error('Failed to send email')
       }
     } catch (error) {
-      alert('Error sending invoice email')
+      toast.error('Error sending email')
     } finally {
+      toast.dismiss(toastId)
       setActionLoading(false)
     }
   }
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -196,10 +204,11 @@ export function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
     return <div>Invoice not found</div>
   }
 
-  const hasDefaultPaymentMethod = invoice.customer.paymentMethods.some(pm => pm.isDefault)
+  const hasDefaultPaymentMethod = invoice?.customer?.paymentMethods?.some(pm => pm.isDefault)
 
   return (
     <div className="space-y-6">
+      <Toaster />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/dashboard/invoices">
@@ -258,18 +267,18 @@ export function InvoiceDetail({ invoiceId }: { invoiceId: string }) {
       )}
 
       {invoice.status === 'ADVANCE_PAID' && hasDefaultPaymentMethod && (
-        <Alert>
+        <Alert className='bg-green-100 text-green-800'>
           <CheckCircle className="h-4 w-4" />
-          <AlertDescription>
+          <AlertDescription className='text-green-800'>
             Advance payment completed. You can now charge the remaining 50% using the saved payment method.
           </AlertDescription>
         </Alert>
       )}
 
       {invoice.status === 'FULLY_PAID' && (
-        <Alert>
+        <Alert className='bg-green-100 text-green-800'>
           <CheckCircle className="h-4 w-4" />
-          <AlertDescription>
+          <AlertDescription className='text-green-800'>
             Invoice fully paid. Both advance and remaining payments have been completed successfully.
           </AlertDescription>
         </Alert>
