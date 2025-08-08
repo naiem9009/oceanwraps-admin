@@ -35,7 +35,7 @@ export async function POST(
       invoiceNumber: invoice.invoiceNumber,
       customerName: invoice.customer.name,
       totalAmount: Number(invoice.totalAmount),
-      advanceAmount: Number(invoice.totalAmount),
+      advanceAmount: Number(invoice.advanceAmount || 0),
       dueDate: invoice.dueDate.toISOString(),
       paymentUrl,
       items: invoice.items.map(item => ({

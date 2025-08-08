@@ -222,7 +222,7 @@ export async function sendInvoiceEmail({
       email: to,
     },
     items,
-    advanceAmount: advanceAmount.toFixed(2),
+    advanceAmount: "0.00",
     totalAmount : totalAmount.toFixed(2),
     note: '50% deposit is required to begin production unless otherwise stated. A 50% deposit is also required to schedule your project.  We cannot hold dates without a deposit',
     status: 'unpaid',
